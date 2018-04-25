@@ -28,7 +28,7 @@ if [ -d $PROJECT ];then
     if [ $? -ne 0 ];then
             git pull origin $BRANCH >>log.txt
     fi  
-    #VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
+    VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
     if [ "$VAR" = "Already" ] ; then
            echo "**********git pull null**********"
            exit 
