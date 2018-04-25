@@ -102,7 +102,7 @@ function make_zipfile(){
   			zip -rq DEBUG_INFO.zip scm_debug_info dump_partitions_script
 		popd
   		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user/multiflash_images
-  			echo LTE_ROW_SKU1>version.txt
+  			echo LTE_ROW_SKU2>version.txt
   			echo ${EX_version} >> version.txt
   			echo ${Pack_name} >> version.txt
   			zip -rq ${Pack_name}.zip ./*
