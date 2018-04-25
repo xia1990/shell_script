@@ -10,7 +10,7 @@ git_branch=BasilN_r00140dev
 Date=`date +%Y%m%d`
 Ftp_PATCH="./Qualcomm/8976/LF1001QN"
 MOD_VER=false
-LF1001QN_WIFI_ROW_USER=true
+LF1001QN_LTE_ROW_SKU2_USER=true
 
 function clean_code(){
 	if [ -d $project ];then
@@ -68,10 +68,10 @@ function modify_version(){
 
 
 function build_code(){
-	pushd ${PATHROOT}/${project}
+	pushd ${PATHROOT}/${project}/
 		rm -rf build_target.cfg
-		if [ ${LF1001QN_WIFI_ROW_USER} = "true" ];then
-  			echo "target=msm8952_64-wifi-row-none-user">>build_target.cfg
+		if [ ${LF1001QN_LTE_ROW_SKU2_USER} = "true" ];then
+  			echo "target=msm8952_64-lte-row-sku2-user">>build_target.cfg
 		else
   			echo  ""
 		fi
@@ -96,18 +96,18 @@ function packing(){
 
 function make_zipfile(){
 	packing
-	if [ ${LF1001QN_WIFI_ROW_USER} = "true" ] ; then
-		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user
+	if [ ${LF1001QN_LTE_ROW_SKU2_USER} = "true" ] ; then
+		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user
   			zip -rq ${Pack_name}_OriginalFactory.zip sahara_images fuse_blow_data
   			zip -rq DEBUG_INFO.zip scm_debug_info dump_partitions_script
 		popd
-  		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user/multiflash_images
-  			echo WIFI_ROW>version.txt
+  		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user/multiflash_images
+  			echo LTE_ROW_SKU1>version.txt
   			echo ${EX_version} >> version.txt
   			echo ${Pack_name} >> version.txt
   			zip -rq ${Pack_name}.zip ./*
 		popd
-  		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user/sd
+  		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user/sd
   			mv msm8952_64-ota-*.zip ${Pack_name}_otafull.zip
   			mv msm8952_64-target_files-*.zip ${Pack_name}-target_files.zip
   		popd
@@ -127,25 +127,24 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   cd ${Pack_name}
   mkdir target
   cd target
-  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user
-  mkdir WIFI_ROW-USER
-  cd WIFI_ROW-USER
+  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user
+  mkdir LTE_ROW_SKU2-USER
+  cd LTE_ROW_SKU2-USER
   put ${Pack_name}_OriginalFactory.zip
   put DEBUG_INFO.zip
-  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user/multiflash_images
+  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user/multiflash_images
   put ${Pack_name}.zip
   mkdir sd
   cd sd
-  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_wifi_row_none_user/sd
+  lcd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku2_user/sd
   put ${Pack_name}_otafull.zip
   put ${Pack_name}-target_files.zip
   bye
 EOC
 
 echo "Check ftp result"
-pushd ~
-	./mk_userdata_N_WIFI_ROW_USER.sh
-popd
+  pushd ~
+  ./mk_userdata_N_LTE_SKU2_ROW_USER.sh
 echo "========== Image Already uploaded 99.100 ~(^_^)~"
 }
 ##########################
