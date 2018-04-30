@@ -4,11 +4,11 @@ PATHROOT=$(pwd)
 
 #得到default.xml中fetch的值
 function get_fetch_and_name(){
-	repo init -u /media/hw5t/gaoyuxia/shell_test/mirror/manifest.git -m default.xml -b master
+	repo init -u ssh://192.168.56.101:29418/manifest.git -m default.xml -b master
 	pushd ${PATHROOT}/.repo/manifests
 		rm -rf project_name.txt project_revision.txt
 		default_revision=$(grep -w "default" default.xml | grep -aoe "revision=[a-zA-Z0-9\"]*" | awk -F'"' '{print $2}')
-		#echo $default_revision
+		echo $default_revision
 		readarray -t xml_array < default.xml
 		for line in "${xml_array[@]}"
 		do
@@ -37,8 +37,8 @@ function prepare_to_do_snapshot(){
 		#将项目名称和分支名称输出到一个文件中
 		paste project_name.txt project_revision.txt > project_list.txt
 		rm -rf message.txt project_revision.txt
-		fetch_name=$(grep -aoe "fetch=[a-z0-9\/\_\"]*" default.xml | awk -F'"' '{print $2}')
-		#echo $fetch_name
+		fetch_name=$(grep -aoe "fetch=[a-z0-9\.\:\//\"]*" default.xml | awk -F'"' '{print $2}')
+		echo $fetch_name
 		while read n
 		do
 			project_name=$(echo $n | awk '{print $1}')
