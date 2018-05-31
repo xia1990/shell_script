@@ -2,24 +2,26 @@
 #打快照repo库
 
 PATHROOT=$(pwd)
+XML="default.xml"
 
-#得到default.xml中fetch的值
+#得到$XML中fetch的值
 function get_fetch_and_name(){
-	#repo init -u /media/hw5t/gaoyuxia/shell_test/mirror/manifest.git -m default.xml -b master
 	pushd ${PATHROOT}/.repo/manifests
 		rm -rf project_name.txt project_revision.txt
-		default_revision=$(grep -w "default" default.xml | grep -aoe "revision=[.A-Z_a-z0-9\"/-]*" | awk -F'"' '{print $2}')
+		default_revision=$(grep -w "default" $XML | grep -aoe "revision=[.A-Z_a-z0-9\"/-]*" | awk -F'"' '{print $2}')
 		echo $default_revision
-		readarray -t xml_array < default.xml
+		#将项目名称输出到一个文件中
+		repo list -n >> project_name.txt
+		readarray -t xml_array < $XML
+		#遍历XML文件
 		for line in "${xml_array[@]}"
 		do
-			echo $line | grep -aoe "project"
+			echo $line | grep -aoe "<project"
 			if [ "$?" == 0 ];then
-				#将项目名称输出到一个文件中
- 				echo $line | grep -aoe "name=[.A-Z_a-z0-9\"/-]*" | awk -F'"' '{print $2}' >> project_name.txt
 				revision_line=$(echo $line | grep -aoe "revision=[.A-Z_a-z0-9\"/-]*" | awk -F'"' '{print $2}')
 				echo $revision_line
 				if [ -z "$revision_line" ];then
+					echo $line >> revision.txt
 					#如果分支名称不存在，则使用默认分支名称
 					revision_line=$default_revision
 					echo $revision_line >> project_revision.txt
@@ -37,15 +39,15 @@ function prepare_to_do_snapshot(){
 	pushd ${PATHROOT}/.repo/manifests
 		#将项目名称和分支名称输出到一个文件中
 		paste project_name.txt project_revision.txt > project_list.txt
-		rm -rf message.txt project_revision.txt
-		fetch_name=$(grep -aoe "fetch=[.A-Z_a-z0-9\"/-]*" default.xml | awk -F'"' '{print $2}')
-		#echo $fetch_name
+		rm -rf message.txt  
+		fetch_name=$(grep -aoe "fetch=[.A-Z_a-z0-9\"/-]*" $XML | awk -F'"' '{print $2}')
+		echo $fetch_name
 		while read n
 		do
 			project_name=$(echo $n | awk '{print $1}')
-			#echo $project_name
+			echo $project_name
 			branch_name=$(echo $n | awk '{print $2}')
-			#echo $branch_name
+			echo $branch_name
 			#得到所有项目对应分支的最新提交信息
 			git ls-remote $fetch_name$n -b $branch_name >> message.txt
 		done < project_list.txt
@@ -58,7 +60,7 @@ function do_snapshot(){
 		#得到项目名称，commitID,分支名称并输出到一个文件中
 		paste project_name.txt message.txt > info.txt
 		rm -rf local.xml project_name.txt message.txt project_list.txt
-		readarray -t xml_array < default.xml
+		readarray -t xml_array < $XML
 		for m in "${xml_array[@]}"
 		do
 			echo $m | grep -aoe "project"
@@ -96,8 +98,8 @@ function do_snapshot(){
 ########## MAIN ###########
 function main(){
 	get_fetch_and_name
-	prepare_to_do_snapshot
-	do_snapshot
+	#prepare_to_do_snapshot
+	#do_snapshot
 }
 main "$@"
 
