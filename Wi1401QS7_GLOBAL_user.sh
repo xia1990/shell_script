@@ -44,17 +44,13 @@ function modify_version(){
 	pushd ${PATHROOT}/$PROJECTAP
 	if [ ${M_Version} = "true" ] ; then
   		pushd ${PATHROOT}/$PROJECTAP/LINUX/android/build/tools
-		Old_VER_NUM=`strings byd_buildinfo.mk | grep -i OEM_PRODUCT_VERSION_SHORT | awk -F ' ' 'NR==1 {print $3}'`
-  		echo ${Old_VER_NUM}
-  		VER_TMP=
-  		Old_VER=${VER_TMP}${Old_VER_NUM}
-  		echo ${Old_VER}
-  		TMP_VER_NUM=`expr ${Old_VER_NUM} + 1`
-  		NEXT_VER_NUM=`printf %06d ${TMP_VER_NUM}`
-  		echo ${NEXT_VER_NUM}
-  		NEXT_VER=${VER_TMP}${NEXT_VER_NUM}
-  		echo ${NEXT_VER}
-  		sed -i s/${Old_VER}/${NEXT_VER}/g byd_buildinfo.mk
+		Old_VER_NUM=$(grep -i "OEM_PRODUCT_VERSION_SHORT.*:=" "byd_buildinfo.mk" | awk '{print $NF}')
+		echo $Old_VER_NUM
+		TMP_VER_NUM=`expr ${Old_VER_NUM} + 1`
+		echo $TMP_VER_NUM
+		NEW_VER_NUM=`printf %06d ${TMP_VER_NUM}`
+		echo $NEW_VER_NUM
+		sed -i s/OEM_PRODUCT_VERSION_SHORT.*:=.*/OEM_PRODUCT_VERSION_SHORT\ :=\ ${NEW_VER_NUM}/g byd_buildinfo.mk
 
   		git diff
   		#git add byd_buildinfo.mk
