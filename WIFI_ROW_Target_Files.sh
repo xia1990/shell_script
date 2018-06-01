@@ -48,7 +48,11 @@ popd
 
 ###########MAIN#########
 function main(){
-	make_target
-	#ftp_upload
+	if [ $# -eq 3 ];then
+		make_target
+		#ftp_upload
+	else
+		echo "请输入参数！！"
+	fi
 }
 main "$@"
