@@ -5,17 +5,38 @@ PATH=~/rar:$PATH
 
 PATHROOT=$(pwd)
 Date=`date +%Y%m%d`
-PROJECT=T10_LA1.1.1_Branch
-#BRANCH=t10_LA1.1.1_dev
-BRANCH=t10_LA1.1.1_dev_nj
-#FTP_PATCH="./Qualcomm/8976/T10_LA1.1.1_Branch/"
-FTP_PATCH="./Qualcomm/8976/T10_LA1.1.1_Branch/t10_LA1.1.1_dev_nj/"
+PROJECT=$1
+BRANCH=$2
+#BRANCH=t10_LA1.1.1_dev_nj
+FTP_PATCH=$3
+#FTP_PATCH="./Qualcomm/8976/T10_LA1.1.1_Branch/t10_LA1.1.1_dev_nj/"
 MOD_VER=false
 T10_LA1_Branch_ENG=true
 
-#cd ../../../../../tmp/
-#rm -rf *
-#cd -
+
+function arg_parse(){
+	if [ $PROJECT == "T10_LA1.1.1_Branch" ];then
+		echo "项目名称输入正确"
+	else
+		echo "项目名称输入不正确"
+		exit
+	fi	
+
+	if [ "$BRANCH" == "t10_LA1.1.1_dev" ] || [ "$BRANCH" == "t10_LA1.1.1_dev_nj" ] ;then
+		echo "分支名称输入正确"
+	else
+		echo "分支名称不正确"
+		exit
+	fi
+
+	if [ "$FTP_PATCH" == "./Qualcomm/8976/T10_LA1.1.1_Branch/" ];then
+		echo "FTP路径输入正确"
+	else
+		echo "FTP路径输入不正确"
+		exit
+	fi
+}
+
 
 function clean_code(){
 if [ -d $PROJECT ];then
@@ -28,7 +49,7 @@ if [ -d $PROJECT ];then
     if [ $? -ne 0 ];then
             git pull origin $BRANCH >>log.txt
     fi  
-    VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
+    #VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
     if [ "$VAR" = "Already" ] ; then
            echo "**********git pull null**********"
            exit 
@@ -183,10 +204,15 @@ echo
 
 ############################
 function main(){
-	#clean_code
-    	#modify_version
-    	#building
-  	make_zipfile
-    	ftp_upload
+	if [ $# -eq 3 ];then
+		arg_parse
+		clean_code
+  	  	modify_version
+    		building
+	  	make_zipfile
+    		ftp_upload
+	else
+		echo "请输入参数"
+	fi
 }
 main "$@"
