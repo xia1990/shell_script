@@ -63,7 +63,7 @@ function modify_version(){
 		popd
 
  		git diff
-  		git "$PATHROOT"/$PROJECT/LINUX/android/build/tools/byd_buildinfo.mk
+  		git add "$PATHROOT"/$PROJECT/LINUX/android/build/tools/byd_buildinfo.mk
   		git commit -m "Modify Version W1506Q_${NEXT_VER}_t1host_${date}"
   		git status
   		git push origin ${BRANCHAP}
