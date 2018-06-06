@@ -8,8 +8,9 @@ PROJECTAP=W1506Q_AP
 PROJECTBP=W1506Q_BP
 BRANCHAP=w1506q_ap_32_new_dev
 BRANCHBP=w1506q_bp_dev
-Ftp_PATCH="./Qualcomm/8039/W1506Q/"
+Ftp_PATCH="./Qualcomm/8039/W1506Q/32_DEV/NEW_DEV"
 date=`date +%Y%m%d`
+M_Version=true
 
 
 #cd ../../../../../tmp/
@@ -26,7 +27,7 @@ function clean_AP_code(){
  	 	if [ $? -ne 0 ];then
         		git pull origin $BRANCH >>update.log
   		fi
-  		VAR=`strings update.log | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
+  		#VAR=`strings update.log | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
   		if [ "$VAR" = "Already" ] ; then
   			echo "git pull null"
           		exit
@@ -46,9 +47,9 @@ function clean_AP_code(){
 }
 
 function modify_version(){
-	pushd "$PATHROOT"/$PROJECT/
+	pushd "$PATHROOT"/$PROJECTAP/
 	if [ ${M_Version} = "true" ] ; then
-  		pushd "$PATHROOT"/$PROJECT/LINUX/android/build/tools
+  		pushd "$PATHROOT"/$PROJECTAP/LINUX/android/build/tools
   		Old_VER_NUM=`strings byd_buildinfo.mk | grep -i OEM_PRODUCT_VERSION_SHORT | awk -F ' ' 'NR==1 {print $3}'`
   		echo ${Old_VER_NUM}
   		VER_TMP=
@@ -63,7 +64,7 @@ function modify_version(){
 		popd
 
  		git diff
-  		git add "$PATHROOT"/$PROJECT/LINUX/android/build/tools/byd_buildinfo.mk
+  		git add "$PATHROOT"/$PROJECTAP/LINUX/android/build/tools/byd_buildinfo.mk
   		git commit -m "Modify Version W1506Q_${NEXT_VER}_t1host_${date}"
   		git status
   		git push origin ${BRANCHAP}
@@ -73,6 +74,7 @@ function modify_version(){
 	else
     		echo --------- Not Modify Version ---------
 	fi
+	popd
 }
 
 ##################### Modify Version ######################
@@ -112,9 +114,10 @@ function building(){
 
 
 function packing(){
-	pushd "$PATHROOT"/$PROJECT/LINUX/android/build/tools
+	pushd "$PATHROOT"/$PROJECTAP/LINUX/android/build/tools
 	NEW_VER_NUM=`strings byd_buildinfo.mk | grep -i OEM_PRODUCT_VERSION_SHORT | awk -F ' ' 'NR==1 {print $3}'`
 	MVersion=S${NEW_VER_NUM}_user
+	echo $MVersion
 	Target_name=W1506q_S${NEW_VER_NUM}_t1host_${date}
 	Pack_name=W1506q_t1host_global_${MVersion}_${date}
 	echo ${Pack_name}
@@ -124,12 +127,12 @@ function packing(){
 function make_zipfile(){
 	packing
 	echo "Ready to pack"
-	pushd "$PATHROOT"/$PROJECT/SCM_COPY_FILES/msm8916_32_t1host_global_user
+	pushd "$PATHROOT"/$PROJECTBP/SCM_COPY_FILES/msm8916_32_t1host_global_user
 		zip -r -9 ${Pack_name}_OriginalFactory.zip sahara_images/*
 		zip -r -9 DEBUG_INFO.zip scm_debug_info/*
 		zip -r -9 ${Pack_name}_modem_image.zip scm_integrated_for_3rd  
 	popd
-	pushd "$PATHROOT"/$PROJECT/SCM_COPY_FILES/msm8916_32_t1host_global_user/multiflash_images
+	pushd "$PATHROOT"/$PROJECTBP/SCM_COPY_FILES/msm8916_32_t1host_global_user/multiflash_images
 		zip -r -9 ${Pack_name}_image.zip ./*
 	popd
 }
@@ -169,10 +172,10 @@ echo
 
 ##################
 function main(){
-	clean_AP_code
-	clean_BP_code
-	modify_version
-	building
+	#clean_AP_code
+	#clean_BP_code
+	#modify_version
+	#building
 	make_zipfile
 	ftp_upload
 }
