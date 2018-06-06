@@ -7,13 +7,24 @@ PATHROOT=$(pwd)
 Date=`date +%Y%m%d`
 PROJECT=$1
 BRANCH=$2
-#BRANCH=t10_LA1.1.1_dev_nj
 FTP_PATCH=$3
-#FTP_PATCH="./Qualcomm/8976/T10_LA1.1.1_Branch/t10_LA1.1.1_dev_nj/"
 MOD_VER=false
 T10_LA1_Branch_ENG=true
 
+#检查编译服务器磁盘空间是否充足
+function check_memory(){
+	SPACE=$(df -h | grep "/media/hw5t" | awk '{print $4}')	
+	echo $SPACE
+	if [ "$SPACE" -lt 10 ];then
+		echo "服务器空间不足！！！"
+		exit
+	else
+		echo "空间够用"
+	fi
+}
 
+
+#校验参数是否合法
 function arg_parse(){
 	if [ $PROJECT == "T10_LA1.1.1_Branch" ];then
 		echo "项目名称输入正确"
@@ -204,6 +215,7 @@ echo
 
 ############################
 function main(){
+	check_memory
 	if [ $# -eq 3 ];then
 		arg_parse
 		clean_code
