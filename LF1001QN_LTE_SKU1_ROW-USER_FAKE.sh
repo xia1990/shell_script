@@ -20,7 +20,7 @@ function clean_code(){
   		git reset --hard HEAD
   		git checkout $git_branch
   		git pull origin $git_branch >>log.txt
-  		VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
+  		#VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
   		if [ "$VAR" = "Already" ] ; then
   			echo "**********git pull null**********"
          		exit
@@ -108,9 +108,13 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary
   cd ${Ftp_PATCH}
+  mkdir ${Pack_name}
   cd ${Pack_name}
+  mkdir target
   cd target
+  mkdir LTE_ROW_SKU1-USER
   cd LTE_ROW_SKU1-USER
+  mkdir sd
   cd sd
   mkdir fake
   cd fake
@@ -122,10 +126,11 @@ EOC
 echo "假包上传成功"
 echo "========== Image Already uploaded 11.100 ~(^_^)~"
 }
+
 ##########################
 function main(){
-	#clean_code
-	#modify_version
+	clean_code
+	modify_version
 	build_code
 	make_zipfile
 	ftpupload

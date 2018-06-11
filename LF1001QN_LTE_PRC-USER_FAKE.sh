@@ -108,9 +108,13 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary
   cd ${Ftp_PATCH}
+  mkdir ${Pack_name}
   cd ${Pack_name}
+  mkdir target
   cd target
+  mkdir LTE_PRC_SKU1-USER
   cd LTE_PRC_SKU1-USER
+  mkdir sd
   cd sd
   mkdir fake
   cd fake
@@ -125,7 +129,7 @@ echo "========== Image Already uploaded 11.100 ~(^_^)~"
 }
 ##########################
 function main(){
-	clean_code
+	#clean_code
 	modify_version
 	build_code
 	make_zipfile

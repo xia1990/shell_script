@@ -8,7 +8,7 @@ project=LF1001QN
 git_branch=BasilN_r00140dev
 #git_branch=BasilN_CTA
 Date=`date +%Y%m%d`
-Ftp_PATCH="./Qualcomm/8976/LF1001QN"
+Ftp_PATCH="./Qualcomm/8976/LF1001QN/"
 MOD_VER=true
 LF1001QN_LTE_ROW_SKU2_USER=true
 
@@ -107,9 +107,13 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary
   cd ${Ftp_PATCH}
+  mkdir ${Pack_name}
   cd ${Pack_name}
+  mkdir target
   cd target
+  mkdir LTE_ROW_SKU2-USER
   cd LTE_ROW_SKU2-USER
+  mkdir ad
   cd sd
   mkdir fake
   cd fake
@@ -123,7 +127,7 @@ echo "========== Image Already uploaded 11.100 ~(^_^)~"
 }
 ##########################
 function main(){
-	clean_code
+	#clean_code
 	modify_version
 	build_code
 	make_zipfile

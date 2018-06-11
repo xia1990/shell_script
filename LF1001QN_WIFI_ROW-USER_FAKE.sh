@@ -8,7 +8,7 @@ project=LF1001QN
 git_branch=BasilN_r00140dev
 #git_branch=BasilN_CTA
 Date=`date +%Y%m%d`
-Ftp_PATCH="./Qualcomm/8976/LF1001QN"
+Ftp_PATCH="./Qualcomm/8976/LF1001QN/"
 MOD_VER=true
 LF1001QN_WIFI_ROW_USER=true
 
@@ -20,7 +20,7 @@ function clean_code(){
   		git reset --hard HEAD
   		git checkout $git_branch
   		git pull origin $git_branch >>log.txt
-  		VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
+  		#VAR=`strings log.txt | grep -i Already |awk -F' ' 'NR==1 {print $1}'` 
   		if [ "$VAR" = "Already" ] ; then
   			echo "**********git pull null**********"
          		exit
@@ -107,9 +107,13 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary
   cd ${Ftp_PATCH}
+  mkdir ${Pack_name}
   cd ${Pack_name}
+  mkdir target
   cd target
+  mkdir WIFI_ROW-USER
   cd WIFI_ROW-USER
+  mkdir ad
   cd sd
   mkdir fake
   cd fake
@@ -123,10 +127,10 @@ echo "========== Image Already uploaded 11.100 ~(^_^)~"
 }
 ##########################
 function main(){
-	clean_code
-	modify_version
-	build_code
-	make_zipfile
+	#clean_code
+	#modify_version
+	#build_code
+	#make_zipfile
 	ftpupload
 }
 
