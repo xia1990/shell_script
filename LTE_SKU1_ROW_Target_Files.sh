@@ -37,9 +37,8 @@ pushd ${PATHROOT}/$PROJECT/LINUX/android
   cd ${FTP_PATH}
   mkdir ${Pack_name}
   cd ${Pack_name}
-  cd target
+  mkdir LTE_ROW_SKU1-USER
   cd LTE_ROW_SKU1-USER
-  cd sd
   lcd ${PATHROOT}/${PROJECT}/LINUX/android
   put $Update_FILE
   bye
