@@ -35,6 +35,7 @@ pushd ${PATHROOT}/$PROJECT/LINUX/android
   user sh@scm sh@scm
   binary
   cd ${FTP_PATH}
+  mkdir ${Pack_name}
   cd ${Pack_name}
   cd target
   cd LTE_ROW_SKU2-USER
@@ -50,7 +51,7 @@ popd
 function main(){
 	if [ $# -eq 3 ];then
 		make_target
-		#ftp_upload
+		ftp_upload
 	else
 		print "请输入参数！！"
 	fi
