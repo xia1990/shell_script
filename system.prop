@@ -1,0 +1,6 @@
+# apps setting products information\r
+# value: the software release number, template:Dell-Grappa
+apps.setting.product.swversion = DSB0020_02.02.00_USER_20180416
+# apps setting products information\r
+# value: the software release number, template:Del-Grappa
+apps.setting.product.outswver = DSB0020_02.02.00_USER_20180416
