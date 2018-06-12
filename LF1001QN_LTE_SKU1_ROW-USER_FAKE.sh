@@ -95,6 +95,7 @@ function make_zipfile(){
 	if [ ${LF1001QN_LTE_SKU1_ROW_USER} = "true" ] ; then
   		pushd ${PATHROOT}/${project}/SCM_COPY_FILES/msm8952_64_lte_row_sku1_user/sd
   			mv msm8952_64-target_files-*.zip ${Pack_name}-target_files.zip
+			cp ${Pack_name}-target_files.zip ~/Target_FILES
   		popd
 	else
   		echo "goto next"
