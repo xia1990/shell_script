@@ -9,7 +9,9 @@ PROJECTBP=W1506Q_BP
 BRANCHAP=w1506q_ap_32_new_dev
 BRANCHBP=w1506q_bp_dev
 Ftp_PATCH="./Qualcomm/8039/W1506Q/"
+M_Version=false
 date=`date +%Y%m%d`
+
 
 
 #cd ../../../../../tmp/
