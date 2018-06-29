@@ -8,24 +8,8 @@ DATE=`date +%Y%m%d`
 
 function clean_code(){
 	if [ -d "$PROJECT" ];then
-		pushd ${PATHROOT}/$PROJECT
-			repo forall -c 'git clean -fdx;git reset --hard HEAD'
-			repo forall -c 'git status'
-		popd
-
-		pushd ${PATHROOT}/$PROJECT/linux
-			rm -rf out
-		popd
-		
-		pushd ${PATHROOT}/$PROJECT/L4_v2
-			rm -rf LINUX/
-			rm -rf QFILE_FLAT_*
-			rm -rf kcbuild kcc_amss.sh
-		popd
-
-		pushd ${PATHROOT}/$PROJECT/
-			repo sync -j4
-		popd
+		rm -rf *
+		repo sync -j4
 	else
 		repo init -u ssh://yinjigang@10.30.99.88:29418/JA32_BSP/android/manifest -b ja32_byd_bsp -m default.xml
 		repo sync -j4		
