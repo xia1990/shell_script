@@ -18,7 +18,7 @@ do
 	echo $endcommit
 	pushd ${PATHROOT}/$PROJECT/$name
 	pwd
-		git log --pretty=format:"%H,%an,%s" $begincommit..$endcommit | grep -v "Merged" > release_note.txt
+		git log --pretty=format:"%H   %an  %s" $begincommit..$endcommit | grep -v "Merge" > release_note.txt
 	popd
 done
 find . -name "release_note.txt" | xargs cat | tee -a release_note
