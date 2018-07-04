@@ -46,11 +46,11 @@ function get_release_note(){
 			export COMMITID=$line
 			CHANGE_ID=$(repo forall -c 'git log $COMMITID -1 2>/dev/null' | grep "Change-Id" | awk -F':' '{print $2}')
 			echo "change_id:"$CHANGE_ID
-			AUTHOR=$(repo forall -c 'git log $COMMITID -1 2>/dev/null' | grep "Author" | awk -F' ' '{print $2}')
-			echo "author:"$AUTHOR
 			MESSAGE=$(repo forall -c 'git log $COMMITID --pretty=format:"%s" -1 2>/dev/null')
 			echo "message:"$MESSAGE
-			echo -e "$CHANGE_ID\t$AUTHOR\t$MESSAGE" >> release_notes.txt
+			FILES=$(repo forall -c 'git log $COMMITID --pretty=format:"" --name-status -1 2>/dev/null')
+			echo $FILES
+			echo -e "$CHANGE_ID\t$MESSAGE\t$FILES" >> change_list.txt
 		done
 	popd
 }
