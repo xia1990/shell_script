@@ -39,7 +39,7 @@ function get_commit(){
 
 function get_release_note(){
 	pushd ${PATHROOT}/$PROJECT
-		rm -rf release_notes.txt
+		rm -rf change_list.txt
 		readarray -t xml_array < commit.txt
 		for line in "${xml_array[@]}"
 		do
