@@ -43,6 +43,7 @@ function get_release_note(){
 		readarray -t xml_array < commit.txt
 		for line in "${xml_array[@]}"
 		do
+			#导入自定义变量，使其在repo命令中使用
 			export COMMITID=$line
 			CHANGE_ID=$(repo forall -c 'git log $COMMITID -1 2>/dev/null' | grep "Change-Id" | awk -F':' '{print $2}')
 			echo "change_id:"$CHANGE_ID
