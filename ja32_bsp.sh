@@ -70,7 +70,7 @@ function make_zipfile(){
 
 function ftp_upload(){
 Ftp_PATCH="./Qualcomm/SDM630/JA32_BSP"
-Pack_name=JA32_BSP_$DATE
+Pack_name=JA32_BSP_${NEW_VERSION}_$DATE
 ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary

@@ -61,15 +61,17 @@ function build_L4_v2(){
 
 function make_zipfile(){
 	pushd ${PATHROOT}/$PROJECT/L4_v2
+	NEW_VERSION=V$VERSION
+	echo $NEW_VERSION
 		./kcc_amss.sh --rom common
 
 		pushd deploy_$DATE/bin
-			zip -r -9 deploy_$DATE.zip ./*
+			zip -r -9 deploy_${NEW_VERSION}_$DATE.zip ./*
 		popd
 
 		pushd QFILE_FLAT_img_$DATE
 			pushd bin
-				zip -r -9 JA32_BSP_$VERSION_$DATE.zip ./*
+				zip -r -9 JA32_BSP_${NEW_VERSION}_$DATE.zip ./*
 			popd
 		popd
 	popd
@@ -77,7 +79,7 @@ function make_zipfile(){
 
 function ftp_upload(){
 Ftp_PATCH="./Qualcomm/SDM630/JA32_BSP"
-Pack_name=JA32_BSP_$DATE
+Pack_name=JA32_BSP_${NEW_VERSION}_$DATE
 ftp -n 10.30.11.100 2>&1 <<EOC
   user sh@scm sh@scm
   binary
@@ -87,9 +89,9 @@ ftp -n 10.30.11.100 2>&1 <<EOC
   mkdir target
   cd target
   lcd ${PATHROOT}/$PROJECT/L4_v2/QFILE_FLAT_img_$DATE/bin
-  put JA32_BSP_$VERSION_$DATE.zip 
+  put JA32_BSP_${NEW_VERSION}_$DATE.zip 
   lcd ${PATHROOT}/$PROJECT/L4_v2/deploy_$DATE
-  put deploy_$DATE.zip
+  put deploy_${NEW_VERSION}_$DATE.zip
   bye
 EOC
 }
