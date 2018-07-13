@@ -4,12 +4,16 @@
 PATHROOT=$(pwd)
 PROJECT="JA32_BSP"
 DATE=`date +%Y%m%d`
+OLD_BRANCH="ja32_byd_bsp"
+NEW_BRANCH="ja32_byd_bsp_factory"
 VERSION=$1
 
 
 function clean_code(){
 	if [ -d "$PROJECT" ];then
 		pushd ${PATHROOT}/$PROJECT
+			repo abandon $OLD_BRANCH
+			repo init -b $NEW_BRANCH
 			rm -rf *
 			repo sync -j4
 		popd

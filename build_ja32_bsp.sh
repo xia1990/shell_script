@@ -4,14 +4,17 @@
 PATHROOT=$(pwd)
 PROJECT="JA32_BSP"
 DATE=`date +%Y%m%d`
+OLD_BRANCH="ja32_byd_bsp"
+NEW_BRANCH="ja32_byd_bsp_factory"
 VERSION=$1
 
 
 function clean_code(){
 	if [ -d "$PROJECT" ];then
 		pushd ${PATHROOT}/$PROJECT
-			repo forall -c 'git clean -fdx;git reset --hard HEAD'
-			repo forall -c 'git status'
+			repo forall -c 'git clean -fdx;git reset --hard HEAD;git status'
+			repo abandon $OLD_BRANCH
+			repo init -b $NEW_BRANCH
 		popd
 
 		pushd ${PATHROOT}/$PROJECT/linux
@@ -26,6 +29,7 @@ function clean_code(){
 
 		pushd ${PATHROOT}/$PROJECT/
 			repo sync -j4
+			repo start $NEW_BRANCH --all
 		popd
 	else
 		repo init -u ssh://yinjigang@10.30.99.88:29418/JA32_BSP/android/manifest -b ja32_byd_bsp -m default.xml
