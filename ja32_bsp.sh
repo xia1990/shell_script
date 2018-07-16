@@ -16,6 +16,7 @@ function clean_code(){
 			repo init -b $NEW_BRANCH
 			rm -rf *
 			repo sync -j4
+			repo start $NEW_BRANCH --all
 		popd
 	else
 		repo init -u ssh://yinjigang@10.30.99.88:29418/JA32_BSP/android/manifest -b ja32_byd_bsp -m default.xml
