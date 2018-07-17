@@ -4,10 +4,15 @@
 #
 
 from pyExcelerator import *
+import xlwt
 import os
 import re
 import sys
 w=Workbook()
+#设置编码格式
+w = xlwt.Workbook(encoding = 'utf-8') 
+
+
 #添加一个工作簿，并命名为:release note
 ws = w.add_sheet('release note')
 
