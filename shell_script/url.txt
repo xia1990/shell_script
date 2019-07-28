@@ -1,0 +1,1 @@
+ssh -p 29418 10.0.30.9 gerrit create-project -n "$PROJECT_PREFIX"/"${name}" --empty-commit -b master -t FAST_FORWARD_ONLY

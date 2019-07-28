@@ -1,0 +1,1 @@
+ssh-keygen -f "/home2/wangshuang/.ssh/known_hosts" -R [10.0.30.9]:29418

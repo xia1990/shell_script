@@ -1,0 +1,140 @@
+#!/usr/bin/perl
+
+##lihaiyan@wind-mobi.com 20180821 +++
+############################################################################################################################
+##note: need copy code from /wind/custom/NOHLOS befor compile
+## Release complete unsparse images:       ./cpn [P118F | WID016 | msm8953_64]
+## Release complete images:                waiting
+## Release NOHLOS images just:		       waiting
+## Release images without cp form android:  ./cpn
+############################################################################################################################
+##lihaiyan@wind-mobi.com 20180821 ---
+
+use strict;
+
+my $base_path = $ENV{'PWD'};
+my $user = $ENV{'USER'};
+my $out = "$base_path/out";
+#gaoyuxia@wind-mobi.com 20180929
+my $overall_symbols = "$out/overall_symbols"
+#gaoyuxia@wind-mobi.com 20180929
+
+##lihaiyan@wind-mobi.com 20180821 +++
+if(!$ARGV[0]){
+	print("******************************************* \n");
+	print("**  usage:                               ** \n");
+	print("**  ./cpn [P118F | WID016 | msm8953_64]  ** \n");
+	print("******************************************* \n");
+	## exit;
+}
+##lihaiyan@wind-mobi.com 20180821 ---
+
+
+
+if(-d $out)
+{
+    system("rm -rf $out");
+}
+#gaoyuxia@wind-mobi.com 20180929
+system("mkdir -p $out/overall_symbols");
+#gaoyuxia@wind-mobi.com 20180929
+
+##lihaiyan@wind-mobi.com 20180821 +++
+if($ARGV[0]){
+	if( -d "$base_path/LA.UM.6.6/LINUX/android/out/target/product/msm8953_64/" )
+	{
+	system("rm -rf $base_path/LA.UM.6.6/LINUX/android/out/target/product/msm8953_64/");
+	}
+	system("mkdir -p $base_path/LA.UM.6.6/LINUX/android/out/target/product/msm8953_64/");
+	
+	# start copy from android
+	my @ap_list = ("emmc_appsboot.mbn", "boot.img","cache.img","persist.img","mdtp.img","ramdisk.img","recovery.img","system.img","userdata.img","vendor.img","factory.img");
+	foreach (@ap_list)
+	{
+		system("cp -av $base_path/../out/target/product/$ARGV[0]/$_  $base_path/LA.UM.6.6/LINUX/android/out/target/product/msm8953_64/");
+	}
+}
+##lihaiyan@wind-mobi.com 20180821 ---
+
+
+chdir("$base_path/SDM450.LA.3.0.1/common/build");
+system("python build.py");
+chdir($base_path);
+print("Split finished!!!\n");
+
+#NON-HLOS.bin
+system("cp $base_path/SDM450.LA.3.0.1/common/build/bin/asic/NON-HLOS.bin $out");
+#rpm.mbn
+system("cp $base_path/RPM.BF.2.4/rpm_proc/build/ms/bin/8953/rpm.mbn $out");
+#prog_emmc_firehose_8917_lite.mbn
+system("cp $base_path/BOOT.BF.3.3/boot_images/build/ms/bin/JAADANAZ/prog_emmc_firehose_8953_ddr.mbn $out");
+#prog_emmc_firehose_8917_ddr.mbn
+system("cp $base_path/BOOT.BF.3.3/boot_images/build/ms/bin/JAADANAZ/prog_emmc_firehose_8953_lite.mbn $out");
+#sbl1.mbn
+system("cp $base_path/BOOT.BF.3.3/boot_images/build/ms/bin/JAASANAZ/sbl1.mbn $out");
+#dongqinling@wind-mobi.com start
+system("cp $base_path/MPSS.TA.2.3/modem_proc/build/ms/orig_MODEM_PROC_IMG_8953.gps.prodQ.elf $out");
+#dongqinling@wind-mobi.com end
+#huangshaopeng@wind-mobi.com 20170911 begin
+#adspso.bin  
+system("cp $base_path/ADSP.8953.2.8.4/adsp_proc/build/dynamic_signed/8953/adspso.bin $out");
+
+#cmnlib.mbn  cmnlib64.mbn  devcfg.mbn  keymaster.mbn  
+my @tz_list = ("cmnlib.mbn", "cmnlib_30.mbn", "keymaster64.mbn", "cmnlib64.mbn", "cmnlib64_30.mbn", "devcfg.mbn", "keymaster.mbn");
+foreach (@tz_list)
+{
+    system("cp $base_path/TZ.BF.4.0.5/trustzone_images/build/ms/bin/SANAANAA/$_ $out");
+}
+#huangshaopeng@wind-mobi.com 20170911 end
+
+##lihaiyan@wind-mobi.com 20180821 +++
+#lksecapp.mbn
+system("cp $base_path/TZ.BF.4.0.5/trustzone_images/build/ms/bin/SANAANAA/lksecapp.mbn $out");
+##lihaiyan@wind-mobi.com 20180821 ---
+#tz.mbn
+system("cp $base_path/TZ.BF.4.0.5/trustzone_images/build/ms/bin/SANAANAA/tz.mbn $out");
+#gpt_backup0.bin gpt_both0.bin gpt_main0.bin patch0.xml
+my @gpt_list = ("gpt_backup0.bin", "gpt_both0.bin", "gpt_main0.bin", "patch0.xml","rawprogram0.xml");
+foreach (@gpt_list)
+{
+    system("cp $base_path/SDM450.LA.3.0.1/common/build/$_ $out");
+}
+#emmc_appsboot.mbn boot.img recovery.img mdtp.img
+my @ap_list = ("emmc_appsboot.mbn", "boot.img", "mdtp.img", "recovery.img");
+foreach (@ap_list)
+{
+    system("cp $base_path/LA.UM.6.6/LINUX/android/out/target/product/msm8953_64/$_ $out");
+}
+#split img
+system("cp $base_path/SDM450.LA.3.0.1/common/build/bin/asic/sparse_images/* $out");
+#gaoyuxia@wind-mobi.com 20180929
+system("cp -rf --parents ./ADSP.8953.2.8.4/adsp_proc/build/ms/*.elf $overall_symbols");
+system("cp -rf --parents ./ADSP.8953.2.8.4/adsp_proc/qdsp6/qshrink/src/msg_hash.txt $overall_symbols");
+system("cp -rf --parents ./MPSS.TA.2.3/modem_proc/build/ms/*.elf $overall_symbols");
+system("cp -rf --parents ./RPM.BF.2.4/rpm_proc/core/bsp/rpm/build/8953/RPM_AAAAANAAR.elf $overall_symbols");
+system("cp -rf --parents ./TZ.BF.4.0.5/trustzone_images/core/securemsm/trustzone/qsee/qsee.elf $overall_symbols");
+system("cp -rf --parents ./TZ.BF.4.0.5/trustzone_images/build/ms/bin/ZALAANAA/cmnlib_30.mbn $overall_symbols");
+system("cp -rf --parents ./TZ.BF.4.0.5/trustzone_images/build/ms/bin/ZALAANAA/cmnlib64_30.mbn $overall_symbols");
+system("cp -rf --parents ./MPSS.TA.2.3/modem_proc/build/myps/qshrink/* $overall_symbols");
+#gaoyuxia@wind-mobi.com 20180929
+
+=pod
+=cut
+my ($sec, $min, $hour, $day, $month, $year, $a, $b, $c) = localtime(time);
+#gaoyuxia@wind-mobi.com start 20180926
+my $zip_name = sprintf("FlashPackage_SDM450_Factory_QFIL.zip", $year+1990, $month+1, $day, $hour, $min, $sec);
+#gaoyuxia@wind-mobi.com end 20180926
+print "$zip_name\n";
+
+chdir("$base_path/out");
+#dongqinling@wind-mobi.com start 20180523
+system("cp rawprogram_unsparse.xml rawprogram_unsparse_upgrade.xml");
+system("sed -i 's/factory_1.img//' rawprogram_unsparse_upgrade.xml");
+#system("sed -i 's/esim_1.img//' rawprogram_unsparse_upgrade.xml");
+#dongqinling@wind-mobi.com end 20180523
+
+#gaoyuxia@wind-mobi.com 20180929
+system("zip -r -9 $zip_name ./*");
+#gaoyuxia@wind-mobi.com 20180929
+
+system("cp $zip_name /data/mine/test/MT6572/$user");
