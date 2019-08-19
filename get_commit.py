@@ -6,9 +6,12 @@ import xlrd
 import time
 import commands
 import re
+d_time="2019-08-05"
+project_name="^LNX_LA_SDM450_PSW/.*"
 
 D_Time=time.strftime("%Y-%m-%d", time.localtime())
-filename=commands.getoutput('ssh -p 29418 10.0.30.251 gerrit query branch:master after:"2019-08-05" project:^LNX_LA_SDM450_PSW/.*  status:merged  | grep "subject" > message.txt')
+#filename=commands.getoutput('ssh -p 29418 10.0.30.251 gerrit query branch:master after:"2019-08-05" project:^LNX_LA_SDM450_PSW/.*  status:merged  | grep "subject" > message.txt')
+filename=commands.getoutput('ssh -p 29418 10.0.30.251 gerrit query branch:master after:%s project:%s  status:merged  | grep "subject" > message.txt' % (d_time,project_name))
 commit_msg=[]
 
 
