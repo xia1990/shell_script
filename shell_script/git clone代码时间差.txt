@@ -1,0 +1,2 @@
+git clone直接拉取代码的时间：总共11分钟
+git clone --reference：拉取代码的时间：4分钟
