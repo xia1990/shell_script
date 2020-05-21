@@ -1,5 +1,6 @@
 #!/usr/bin/python
 #_*_ coding:utf-8 _*_
+#导出两个版本之间的修改内容（单库操作）
 
 import xlwt
 import xlrd
