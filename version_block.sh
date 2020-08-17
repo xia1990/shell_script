@@ -33,7 +33,7 @@ do
 		old_upstream=$(echo ${old_array[$i]} | grep -aoe "upstream=[a-zA-Z\"\"]*" | awk -F'"|"' '{print $2}')
 		echo $old_upstream
 		new_upstream=$(echo ${new_array[$i]} | grep -aoe "upstream=[a-zA-Z\"\"]*" | awk -F'"|"' '{print $2}')
-		echo $new_upstream
+		echo $upstream
 		#如果是同一个分支
 		if [ $old_upstream == $new_upstream ];then
 			#得到仓库commitID
